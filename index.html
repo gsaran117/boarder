@@ -1,0 +1,267 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fresh Basket</title>
+  <style>
+    body {
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 50px;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-box {
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(16, 16, 16, 0);
+      width: 350px;
+      background: rgba(0, 0, 0, 0);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ece2e2;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    p a {
+      color: #28a745;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    p a:hover {
+      text-decoration: underline;
+    }
+
+    .google-login {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 10, 10, 0);
+      border: 1px solid #110101;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+      color: rgb(249, 233, 233);
+    }
+
+    .google-btn img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+
+    .google-btn:hover {
+      background-color: #000000;
+    }
+
+    .messageDiv {
+      background-color: hsl(327, 90%, 28%);
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      font-size: 1rem;
+      opacity: 0;
+      animation: fadeOut 7s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="loginContainer">
+    <div class="form-box">
+      <h2>Fresh Basket</h2>
+      <form id="loginForm">
+        <div id="signInMessage" class="messageDiv" style="display:none;"></div>
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Sign In</button>
+      </form>
+      <p>Don't have an account? <a href="#" onclick="toggleForms()">Sign Up</a></p>
+    </div>
+  </div>
+
+  <div class="container" style="display: none;" id="signupContainer">
+    <div class="form-box">
+      <h2>Fresh Basket</h2>
+      <form id="signupForm">
+        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+        <input type="text" id="name" placeholder="Full Name" required />
+        <input type="email" id="signupEmail" placeholder="Email" required />
+        <input type="password" id="signupPassword" placeholder="Password" required />
+        <input type="tel" id="phone" placeholder="Phone Number" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="google-login">
+        <button onclick="handleGoogleLogin()" class="google-btn">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" />
+          Continue with Google
+        </button>
+      </div>
+      <p>Already have an account? <a href="#" onclick="toggleForms()">Sign In</a></p>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import {
+      getAuth,
+      signInWithPopup,
+      GoogleAuthProvider,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyANpHJ_koISV2Rpl_H8QeGVb6wF19AZyUs",
+      authDomain: "new-project-22503.firebaseapp.com",
+      projectId: "new-project-22503",
+      storageBucket: "new-project-22503.appspot.com",
+      messagingSenderId: "24839799529",
+      appId: "1:24839799529:web:75cefcb76bff5fe7d76678",
+      measurementId: "G-P8WXKQTNXB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const db = getFirestore(app);
+
+    window.handleGoogleLogin = function () {
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
+          const user = result.user;
+          console.log("Google Sign-In successful:", user);
+
+          await setDoc(doc(db, "users", user.uid), {
+            name: user.displayName,
+            email: user.email,
+            phone: user.phoneNumber || "",
+            provider: "google"
+          });
+
+          alert("Welcome, " + user.displayName + "!");
+          window.location.href = "boarder.html";
+        })
+        .catch((error) => {
+          console.error("Google Sign-In Error:", error);
+          alert("Google Sign-In failed. Please try again.");
+        });
+    };
+
+    document.getElementById("signupForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const phone = document.getElementById("phone").value;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          name,
+          email,
+          phone,
+          provider: "email"
+        });
+      } catch (error) {
+        console.error("Signup Error:", error);
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+
+          window.location.href = "boarder.html";
+        } else {
+          alert("Access denied. Your account is not fully registered.");
+          auth.signOut();
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+        alert("Login failed: " + error.message);
+      }
+    });
+  </script>
+
+  <script>
+    function toggleForms() {
+      const loginForm = document.getElementById("loginContainer");
+      const signupForm = document.getElementById("signupContainer");
+      loginForm.style.display = loginForm.style.display === "none" ? "flex" : "none";
+      signupForm.style.display = signupForm.style.display === "none" ? "flex" : "none";
+    }
+  </script>
+</body>
+</html>
