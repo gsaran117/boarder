@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fresh Basket - Grocery Store</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: white;
+    }
+    /* Navbar Styles */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #021f03e0;
+      color: white;
+      padding: 1rem 2rem;
+      flex-wrap: wrap;
+    }
+    nav .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+    }
+    nav ul li {
+      cursor: pointer;
+    }
+    nav ul li:hover {
+      text-decoration: underline;
+    }
+    nav .search-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    nav input[type="text"] {
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+    nav button {
+      background: white;
+      color: #000a01da;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 8px;
+      cursor: pointer;
+    }
+    /* Section container for full page sections */
+    .section {
+      display: none;
+      padding: 2rem;
+    }
+    /* Shop Section */
+    #shopSection {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .item {
+      background: rgba(250, 249, 249, 0.993);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 1rem;
+    }
+    .item img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .item h3 {
+      margin: 0.5rem 0;
+    }
+    .item p {
+      color: green;
+      font-weight: bold;
+    }
+    .item button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    /* Full-page Cart Section */
+    #cartSection {
+      /* display none by default; when visible, it occupies the main area */
+      background: #f4f4f4;
+      min-height: calc(100vh - 80px);
+    }
+    #cartSection h2 {
+      text-align: center;
+    }
+    #cartItems {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 1rem auto;
+    }
+    #cartItems li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cartItems li button {
+      background-color: red;
+      border: none;
+      border-radius: 3px;
+      color: white;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .pay-now {
+      display: block;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: darkgreen;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+    }
+    /* Profile Section */
+    #profileSection {
+      max-width: 600px;
+      margin: auto;
+      background: #f8f8f8;
+      border: 1px solid #eee;
+      border-radius: 10px;
+    }
+    #profileSection h2 {
+      text-align: center;
+    }
+    .profile-block {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .profile-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .profile-pic {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .profile-pic img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+    }
+
+    .actions button {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    .actions button:hover {
+      background: #e60000;
+    }
+
+    .save-btn {
+      background: #4CAF50;
+    }
+
+    .save-btn:hover {
+      background: #3e8e41;
+    }
+  
+    .profile-block textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .profile-block button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Fresh Basket</div>
+    <div class="search-group">
+      🔎
+      <input type="text" id="searchInput" placeholder="Search..." oninput="filterItems()" />
+      <button onclick="micSearch()" title="Voice Search">🎤</button>
+      <button onclick="cameraSearch()" title="Scan Image">📷</button>
+    </div>
+    <ul>
+      <li onclick="showShop()">🏪Shop</li>
+      <li onclick="showCart()">🛒Cart (<span id="cartCount">0</span>)</li>
+      <li onclick="showprofile()">👤Profile</li>
+    </ul>
+  </nav>
+
+  <!-- Shop Section -->
+  <div id="shopSection" class="section"></div>
+  
+  <!-- Full-Page Cart Section -->
+  <div id="cartSection" class="section">
+    <h2>Your Cart</h2>
+    <ul id="cartItems"></ul>
+    <button class="pay-now" onclick="buyAndPay()">Buy &amp; Pay Now</button>
+  </div>
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <!-- Profile Section -->
+  <div class="profile-container">
+    <!-- Profile Section -->
+  
+    <div class="profile-block">
+      <h3>Personal Information</h3>
+      <label><strong>Name:</strong></label>
+      <input type="text" id="profileName" placeholder="Your Name">
+      <br>
+      <label><strong>Email:</strong></label>
+      <input type="email" id="profileEmail" placeholder="your@email.com">
+      <br>
+      <label><strong>Delivery Address:</strong></label>
+      <textarea id="profileAddress" rows="3" placeholder="Enter your address"></textarea>
+      <br>
+      <button onclick="saveProfile()">Save Profile</button>
+    </div>
+    <div class="settings-section">
+      <h3>settings</h3>
+      <form id="change-password-form">
+          <div class="form-group">
+              <label for="current-password">Current Password</label>
+              <input type="password" id="current-password" name="current-password" required />
+          </div>
+          <div class="form-group">
+              <label for="new-password">New Password</label>
+              <input type="password" id="new-password" name="new-password" required />
+          </div>
+          <div class="form-group">
+              <label for="confirm-password">Confirm New Password</label>
+              <input type="password" id="confirm-password" name="confirm-password" required />
+          </div>
+          <button type="submit">Change Password</button>
+      </form>
+      <div class="preferences-section">
+        <h3>Preferences</h3>
+        <form id="preferences-form">
+            <div class="form-group">
+                <label for="notifications">Enable Notifications</label>
+                <select>
+                  <option>Enable All</option>
+                  <option>Email Only</option>
+                  <option>SMS Only</option>
+                  <option>Disable</option>
+                
+                <input type="checkbox" id="notifications" name="notifications" checked />
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="theme">Select Theme</label>
+                <select id="theme" name="theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <button type="submit">Save Preferences</button>
+        </form>
+    </div>
+    
+  </div>
+  
+    <div class="order-history-section">
+      <h3>Order History</h3>
+      <table>
+          <thead>
+              <tr>
+                  <th>Item</th>
+                  <th>Amount</th>
+                  <th>Delivery Date</th>
+              </tr>
+            </thead>
+      </table>
+    </div>
+    <div class=" actions">
+      <button id="logout-button" onclick="logout()">Logout</button>
+    <button id="delete-account-button" onclick="deleteAccount()">Delete My Account</button>
+</div>
+  
+
+  <!-- JavaScript Section -->
+  <script>
+    function buyAndPay() {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+  
+      let total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      let amountInPaise = total * 100; // Razorpay expects amount in paise
+  
+      let options = {
+        key: "rzp_test_Qz9CsXYVeXXkv6", // Your Razorpay test key
+        amount: amountInPaise.toFixed(0), // Amount in paise (e.g., 50000 = ₹500)
+        currency: "INR",
+        name: "Your Store",
+        description: "Cart Checkout Payment",
+        image: "https://your-logo-url.com/logo.png", // Optional logo
+        handler: function (response) {
+          alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+          cart = []; // Clear the cart
+          updateCartUI(); // Refresh cart display
+        },
+        prefill: {
+          name: "Customer Name",
+          email: "customer@example.com",
+          contact: "9123456789"
+        },
+        theme: {
+          color: "#3399cc"
+        }
+      };
+  
+      let rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+
+
+
+
+  
+
+  
+    // Data Arrays
+    const groceryItems = [
+      { id: 1, name: "Tomato", price: 20, image: "https://d2jx2rerrg6sh3.cloudfront.net/images/news/ImageForNews_790979_17267935077451310.jpg" },
+      { id: 2, name: "Potato", price: 15, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ950eCmi2uIfVhQubfVHecBgPI3jCPhK3LwA&s" },
+      { id: 3, name: "Carrot", price: 30, image: "https://thumbs.dreamstime.com/b/carrot-pile-close-up-orange-presenting-fresh-vegetables-34736039.jpg" },
+      { id: 4, name: "Onion", price: 20, image: "https://img1.exportersindia.com/product_images/bc-small/dir_137/4081523/onions-1476263629-2459804.jpg" },
+      { id: 5, name: "Cabbage", price: 30, image: "https://images.healthshots.com/healthshots/en/uploads/2021/09/29144251/cabbage.jpg" },
+      { id: 6, name: "Rice", price: 200, image: "https://media.istockphoto.com/id/153737841/photo/rice.jpg?s=612x612&w=0&k=20&c=lfO7iLT0UsDDzra0uBOsN1rvr2d5OEtrG2uwbts33_c=" },
+      { id: 7, name: "Watermelon", price: 40, image: "https://vaya.in/wp-content/uploads/2021/04/Watermelon.jpg" },
+      { id: 8, name: "Muskmelon", price: 30, image: "https://www.greendna.in/cdn/shop/products/Muskmelon-cover-1.jpg?v=1591259817" },
+      { id: 9, name: "Cucumber", price: 20, image: "https://t4.ftcdn.net/jpg/02/67/76/39/360_F_267763934_k5iD6W5kVqVouviBbggj7oXBIKUt9MTj.jpg" },
+      { id: 10, name: "Brinjal", price: 30, image: "https://www.finedininglovers.com/sites/default/files/body_images/l_10962_Aubergine.jpg" },
+      { id: 11, name: "Capsicum", price: 20, image: "https://media.istockphoto.com/id/648348288/photo/capsicum-background.jpg?s=612x612&w=is&k=20&c=H89acQ3x25pP4dIZ9POXoSlp0sL4aufn9imT0M9-qLg=" },
+      { id: 12, name: "Curry Leaf", price: 5, image: "https://5.imimg.com/data5/SELLER/Default/2024/2/388752190/NF/AI/CT/58653852/fresh-curry-leaves.jpg" },
+      { id: 13, name: "Apple", price: 200, image: "https://thumbs.dreamstime.com/b/red-apple-half-red-apple-16354511.jpg" },
+      { id: 14, name: "Banana", price: 150, image: "https://s.wsj.net/public/resources/images/BN-NR643_FIXBUR_M_20160422151327.jpg" },
+      { id: 15, name: "Green Chilly", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkxP2xhOToC6VvlMZzdYHhmkS-WYGVevHSIw&s" },
+      { id: 16, name: "Wheat Flour", price: 40, image: "https://media.istockphoto.com/id/172876049/photo/whole-wheat-flour.jpg?s=612x612&w=0&k=20&c=bK48VqkF49oReBRhDoGfMORGapX2iWosEeImG_SXA8Q=" },
+      { id: 17, name: "Oranges", price: 120, image: "https://schoolnutrition.org/wp-content/uploads/2023/03/MA23-Oranges.png" },
+      { id: 18, name: "Grapes", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgg1d49uY8Qx_SA9IgB4VC_30POp9wq_Vpig&s" },
+      { id: 19, name: "Drum Stick", price: 18, image: "https://4.imimg.com/data4/CM/WB/MY-3756218/fresh-drumstick-500x500.jpg" },
+      { id: 20, name: "Jack Fruit", price: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdL3aPFUd9P0pj6CFPx8f2FRNJU79JvIAJVaXsagO54UeUA2JiKELsLHXIoIdUfcoyYTs&usqp=CAU" },
+      { id: 21, name: "amla", price: 20, image: "https://insanelygoodrecipes.com/wp-content/uploads/2021/04/Indian-Gooseberries-683x1024.png"},
+      { id: 22, name: "pappaya", price: 15, image: "https://www.healthifyme.com/blog/wp-content/uploads/2021/03/Papaya.jpg"},
+      { id: 23, name: "strawberry", price: 30, image: "https://www.liveeatlearn.com/wp-content/uploads/2023/04/Ogallala-Strawberry.jpg"},
+      { id: 24, name: "rassberry",price:130,image:"https://hillviewfarms.com.au/cdn/shop/products/Raspberries-Raspberries.jpg?v=1644649952"},
+      { id: 25, name: "pear", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcQF-SfnoZoVFQdWtG3aZ-kk0JQi8cdI38vC3yyCQOf7ZgvOStfkQ8LJxXgd5eWYJQI10&usqp=CAU"},
+      { id: 26, name: "dragon fruit", price: 200, image: "https://5.imimg.com/data5/SELLER/Default/2023/11/363272444/EM/SJ/IE/198837460/6-2-500x500.png"},
+      { id: 27, name: "breadfruit", price: 40, image: "https://media.npr.org/assets/img/2016/08/09/breadfruit_custom-07bde571bc15f550e94160afeedfcce67583681b.jpg"},
+      { id: 28, name: "avocado", price: 30, image: "https://cdn.shopify.com/s/files/1/0762/8763/9861/products/Aguacate-fuerte.jpg?v=1683890236"},
+      { id: 29, name: "avocado", price: 30, image: "https://cdn.shopify.com/s/files/1/0762/8763/9861/products/Aguacate-fuerte.jpg?v=1683890236"},
+      {id:  30 , name: "avocado", price: 30, image: "https://cdn.shopify.com/s/files/1/0762/8763/9861/products/Aguacate-fuerte.jpg?v=1683890236"},
+      { id: 31, name: "avocado", price: 30, image: "https://cdn.shopify.com/s/files/1/0762/8763/9861/products/Aguacate-fuerte.jpg?v=1683890236"},
+      { id: 32, name: "java plum", price: 5, image: "https://5.imimg.com/data5/WR/ZN/RY/ANDROID-106272066/product-jpeg-250x250.JPG" },
+      { id: 33, name: "fig", price: 200, image:"https://c8.alamy.com/comp/HERF8W/package-of-figs-ficus-carica-HERF8W.jpg "},
+      { id: 34, name: "berry", price: 150, image: "https://cdn.pixabay.com/photo/2019/03/08/12/24/berries-4042232_1280.jpg" },
+      { id: 35, name: "kiwi", price: 30, image: "https://hips.hearstapps.com/hmg-prod/images/full-frame-shot-of-kiwi-slices-royalty-free-image-742260967-1564092068.jpg?crop=1xw:0.66682xh;center,top&resize=980:*"},
+      { id: 36, name: "guava", price: 40, image:"https://m.media-amazon.com/images/I/710ryvgAVHL._AC_UF1000,1000_QL80_.jpg" },
+      { id: 37, name: "durian", price: 120, image: "https://cdn.shopify.com/s/files/1/0268/0622/2893/files/durian_large.jpg?v=1597332525" },
+      { id: 38, name: "star fruit", price: 120, image: "https://www.marthastewart.com/thmb/w2vYNyLaogl_HpS0VozzIknR1iQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/ms-star-fruit-getty-70039cdd11624035905ba762496d8c46.jpg" },
+      { id: 39, name: "mango", price: 18, image: "https://ichef.bbci.co.uk/images/ic/1920x1080/p06hk0h6.jpg" },
+      { id: 40, name: "broccoli", price: 300, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/5390/h1218g16207258089583.jpg" },
+      { id: 41, name: "Tomato", price: 20, image: "https://d2jx2rerrg6sh3.cloudfront.net/images/news/ImageForNews_790979_17267935077451310.jpg" },
+      { id: 42, name: "Potato", price: 15, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ950eCmi2uIfVhQubfVHecBgPI3jCPhK3LwA&s" },
+      { id: 43, name: "Carrot", price: 30, image: "https://thumbs.dreamstime.com/b/carrot-pile-close-up-orange-presenting-fresh-vegetables-34736039.jpg" },
+      { id: 44, name: "Onion", price: 20, image: "https://img1.exportersindia.com/product_images/bc-small/dir_137/4081523/onions-1476263629-2459804.jpg" },
+      { id: 45, name: "Cabbage", price: 30, image: "https://images.healthshots.com/healthshots/en/uploads/2021/09/29144251/cabbage.jpg" },
+      { id: 46, name: "Rice", price: 200, image: "https://media.istockphoto.com/id/153737841/photo/rice.jpg?s=612x612&w=0&k=20&c=lfO7iLT0UsDDzra0uBOsN1rvr2d5OEtrG2uwbts33_c=" },
+      { id: 47, name: "Watermelon", price: 40, image: "https://vaya.in/wp-content/uploads/2021/04/Watermelon.jpg" },
+      { id: 48, name: "Muskmelon", price: 30, image: "https://www.greendna.in/cdn/shop/products/Muskmelon-cover-1.jpg?v=1591259817" },
+      { id: 49, name: "Cucumber", price: 20, image: "https://t4.ftcdn.net/jpg/02/67/76/39/360_F_267763934_k5iD6W5kVqVouviBbggj7oXBIKUt9MTj.jpg" },
+      { id: 50, name: "Brinjal", price: 30, image: "https://www.finedininglovers.com/sites/default/files/body_images/l_10962_Aubergine.jpg" },
+      { id: 51, name: "Capsicum", price: 20, image: "https://media.istockphoto.com/id/648348288/photo/capsicum-background.jpg?s=612x612&w=is&k=20&c=H89acQ3x25pP4dIZ9POXoSlp0sL4aufn9imT0M9-qLg=" },
+      { id: 52, name: "Curry Leaf", price: 5, image: "https://5.imimg.com/data5/SELLER/Default/2024/2/388752190/NF/AI/CT/58653852/fresh-curry-leaves.jpg" },
+      { id: 53, name: "Apple", price: 200, image: "https://thumbs.dreamstime.com/b/red-apple-half-red-apple-16354511.jpg" },
+      { id: 54, name: "Banana", price: 150, image: "https://s.wsj.net/public/resources/images/BN-NR643_FIXBUR_M_20160422151327.jpg" },
+      { id: 55, name: "Green Chilly", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkxP2xhOToC6VvlMZzdYHhmkS-WYGVevHSIw&s" },
+      { id: 56, name: "Wheat Flour", price: 40, image: "https://media.istockphoto.com/id/172876049/photo/whole-wheat-flour.jpg?s=612x612&w=0&k=20&c=bK48VqkF49oReBRhDoGfMORGapX2iWosEeImG_SXA8Q=" },
+      { id: 57, name: "Oranges", price: 120, image: "https://schoolnutrition.org/wp-content/uploads/2023/03/MA23-Oranges.png" },
+      { id: 58, name: "Grapes", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgg1d49uY8Qx_SA9IgB4VC_30POp9wq_Vpig&s" },
+      { id: 59, name: "Drum Stick", price: 18, image: "https://4.imimg.com/data4/CM/WB/MY-3756218/fresh-drumstick-500x500.jpg" },
+      { id: 60, name: "Jack Fruit", price: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdL3aPFUd9P0pj6CFPx8f2FRNJU79JvIAJVaXsagO54UeUA2JiKELsLHXIoIdUfcoyYTs&usqp=CAU" },
+      { id: 61, name: "amla", price: 20, image: "https://insanelygoodrecipes.com/wp-content/uploads/2021/04/Indian-Gooseberries-683x1024.png"},
+      { id: 62, name: "pappaya", price: 15, image: "https://www.healthifyme.com/blog/wp-content/uploads/2021/03/Papaya.jpg"},
+      { id: 63, name: "strawberry", price: 30, image: "https://www.liveeatlearn.com/wp-content/uploads/2023/04/Ogallala-Strawberry.jpg"},
+      { id: 64, name: "rassberry",price:130,image:"https://hillviewfarms.com.au/cdn/shop/products/Raspberries-Raspberries.jpg?v=1644649952"},
+      { id: 65, name: "pear", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcQF-SfnoZoVFQdWtG3aZ-kk0JQi8cdI38vC3yyCQOf7ZgvOStfkQ8LJxXgd5eWYJQI10&usqp=CAU"},
+      { id: 66, name: "dragon fruit", price: 200, image: "https://5.imimg.com/data5/SELLER/Default/2023/11/363272444/EM/SJ/IE/198837460/6-2-500x500.png"},
+      { id: 67, name: "breadfruit", price: 40, image: "https://media.npr.org/assets/img/2016/08/09/breadfruit_custom-07bde571bc15f550e94160afeedfcce67583681b.jpg"},
+      { id: 68, name: "avocado", price: 30, image: "https://cdn.shopify.com/s/files/1/0762/8763/9861/products/Aguacate-fuerte.jpg?v=1683890236"},
+      { id: 69, name: "java plum", price: 5, image: "https://5.imimg.com/data5/WR/ZN/RY/ANDROID-106272066/product-jpeg-250x250.JPG" },
+      { id: 70, name: "fig", price: 200, image:"https://c8.alamy.com/comp/HERF8W/package-of-figs-ficus-carica-HERF8W.jpg "},
+      { id: 71, name: "berry", price: 150, image: "https://cdn.pixabay.com/photo/2019/03/08/12/24/berries-4042232_1280.jpg" },
+      { id: 72, name: "kiwi", price: 30, image: "https://hips.hearstapps.com/hmg-prod/images/full-frame-shot-of-kiwi-slices-royalty-free-image-742260967-1564092068.jpg?crop=1xw:0.66682xh;center,top&resize=980:*"},
+      { id: 73, name: "guava", price: 40, image:"https://m.media-amazon.com/images/I/710ryvgAVHL._AC_UF1000,1000_QL80_.jpg" },
+      { id: 74, name: "durian", price: 120, image: "https://cdn.shopify.com/s/files/1/0268/0622/2893/files/durian_large.jpg?v=1597332525" },
+      { id: 75, name: "star fruit", price: 120, image: "https://www.marthastewart.com/thmb/w2vYNyLaogl_HpS0VozzIknR1iQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/ms-star-fruit-getty-70039cdd11624035905ba762496d8c46.jpg" },
+      { id: 76, name: "mango", price: 18, image: "https://ichef.bbci.co.uk/images/ic/1920x1080/p06hk0h6.jpg" },
+      { id: 77, name: "broccoli", price: 300, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/5390/h1218g16207258089583.jpg" }
+    
+    ];
+    
+    let cart = [];
+    let purchaseHistory = [];
+    
+    // Get DOM elements for sections.
+    const groceryMenu = document.getElementById("shopSection");
+    const cartItems = document.getElementById("cartItems");
+    const cartCount = document.getElementById("cartCount");
+    const cartSection = document.getElementById("cartSection");
+    const profileSection = document.getElementById("profileSection");
+    
+    // --- Shop Section ---
+    function renderMenu() {
+      groceryMenu.innerHTML = "";
+      groceryItems.forEach(item => {
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <h3>${item.name}</h3>
+          <p>₹${item.price.toFixed(2)} per kg</p>
+          <button onclick="addToCart(${item.id})">Add to Cart</button>
+        `;
+        groceryMenu.appendChild(div);
+      });
+    }
+    
+    // --- Cart Functionality ---
+    function addToCart(id) {
+      const item = groceryItems.find(i => i.id === id);
+      const quantity = parseFloat(prompt(`Enter quantity (in kgs) for ${item.name}:`, "1"));
+      if (!isNaN(quantity) && quantity > 0) {
+        const cartItem = { ...item, quantity };
+        cart.push(cartItem);
+        purchaseHistory.push(cartItem);
+        updateCartUI();
+        alert(`${item.name} added to cart!`);
+      } else {
+        alert("Please enter a valid quantity.");
+      }
+    }
+    
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+    
+    function updateCartUI() {
+      cartItems.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${item.name} - ₹${item.price.toFixed(2)} x ${item.quantity} kg = ₹${itemTotal.toFixed(2)}
+          <button onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItems.appendChild(li);
+        total += itemTotal;
+      });
+      const totalLi = document.createElement("li");
+      totalLi.innerHTML = `<strong>Total: ₹${total.toFixed(2)}</strong>`;
+      cartItems.appendChild(totalLi);
+      cartCount.textContent = cart.length;
+    }
+    
+   
+    
+    // --- Section Toggling ---
+    function hideAllSections() {
+      document.getElementById("shopSection").style.display = "none";
+      cartSection.style.display = "none";
+      profileSection.style.display = "none";
+    }
+    
+    function showShop() {
+      hideAllSections();
+      groceryMenu.style.display = "grid";
+      renderMenu();
+    }
+    
+    function showCart() {
+      hideAllSections();
+      cartSection.style.display = "block";
+      updateCartUI();
+    }
+    
+    function showprofile() {
+      hideAllSections();
+      profileSection.style.display = "block";
+      loadProfile();
+      renderPurchaseHistory();
+    }
+    
+    // --- Search, Voice & Camera Functions ---
+    function filterItems() {
+      const searchValue = document.getElementById("searchInput").value.toLowerCase();
+      const items = document.querySelectorAll(".item");
+      items.forEach(item => {
+        const name = item.querySelector("h3").textContent.toLowerCase();
+        item.style.display = name.includes(searchValue) ? "block" : "none";
+      });
+    }
+    
+    function micSearch() {
+      alert("🎤 Voice search feature coming soon!");
+    }
+    function cameraSearch() {
+      alert("📷 Image scan feature coming soon!");
+    }
+    
+    // --- Profile Section ---
+ function updateProfilePicture() {
+        const file = document.getElementById('profile-picture-upload').files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profile-picture').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    function saveProfile() {
+      const name = document.getElementById("profileName").value;
+      const email = document.getElementById("profileEmail").value;
+      const address = document.getElementById("profileAddress").value;
+      localStorage.setItem("profile", JSON.stringify({ name, email, address }));
+      alert("✅ Profile saved successfully!");
+    }
+    
+    function loadProfile() {
+      const profile = JSON.parse(localStorage.getItem("profile"));
+      if (profile) {
+        document.getElementById("profileName").value = profile.name;
+        document.getElementById("profileEmail").value = profile.email;
+        document.getElementById("profileAddress").value = profile.address;
+      }
+    }
+  
+    
+    function renderPurchaseHistory() {
+      const list = document.getElementById("purchaseHistory");
+      list.innerHTML = "";
+      purchaseHistory.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - ₹${item.price.toFixed(2)} x ${item.quantity} kg`;
+        list.appendChild(li);
+      });
+      function logout() {
+      alert("You have been logged out.");
+      // Redirect or clear session
+    }
+
+    function deleteAccount() {
+      if (confirm("Are you sure you want to delete your account? This action is permanent.")) {
+        alert("Account deleted.");
+        // Perform delete logic
+      }
+    }
+      
+    }
+    
+    // --- Initial Load ---
+    showShop();
+  </script>
+</body>
+</html>
