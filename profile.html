@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <!-- Add Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif; /* Updated font */
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600; /* Bold for headings */
+    }
+
+    p {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 400; /* Regular weight for paragraphs */
+    }
+
+    button {
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif; /* Ensure buttons use the same font */
+    }
+
+    /* Profile Header */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .profile-header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    .profile-header .profile-info {
+      flex: 1;
+    }
+
+    .profile-header .profile-info h2 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600; /* Bold for better readability */
+    }
+
+    .profile-header .profile-info p {
+      margin: 5px 0;
+      font-size: 1rem;
+      font-weight: 400; /* Regular weight for details */
+    }
+
+    .edit-profile-btn {
+      background-color: white;
+      color: #4CAF50;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600; /* Semi-bold for buttons */
+      transition: background-color 0.3s ease;
+    }
+
+    .edit-profile-btn:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Profile Options */
+    .profile-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: space-around;
+    }
+
+    .profile-options div {
+      text-align: center;
+      cursor: pointer;
+      width: 120px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-options div:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-options div i {
+      font-size: 2rem;
+      color: #4CAF50;
+    }
+
+    .profile-options div p {
+      margin: 10px 0 0;
+      font-size: 1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* Slides */
+    .slide {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      min-height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .back-button i {
+      font-size: 1.2rem;
+      color: #4CAF50;
+    }
+
+    .back-button span {
+      font-size: 1rem;
+      color: #4CAF50;
+    }
+
+    /* Edit Profile Modal */
+    .edit-profile-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .edit-profile-modal input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif; /* Ensure inputs use the same font */
+    }
+
+    .edit-profile-modal button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      font-family: 'Poppins', sans-serif; /* Ensure buttons use the same font */
+      font-weight: 600; /* Semi-bold for buttons */
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    /* Sign-Up Form */
+    .signup-form {
+      display: none;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    .signup-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .signup-form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+    }
+
+    .signup-form button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <!-- Profile Section -->
+  <div id="profileSection" class="section">
+    <div class="profile-header">
+      <img id="profilePicture" src="https://via.placeholder.com/80" alt="Profile Picture">
+      <div class="profile-info">
+        <h2 id="profileNameDisplay">Guest</h2>
+        <p id="profilePhoneDisplay">Not Provided</p>
+        <p id="profileEmailDisplay">Not Provided</p>
+        <button onclick="openEditProfileModal()" class="edit-profile-btn">Edit Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-options">
+    <div onclick="openSlide('ordersSlide')">
+      <i class="fas fa-shopping-bag"></i>
+      <p>Your Orders</p>
+    </div>
+    <div onclick="openSlide('addressesSlide')">
+      <i class="fas fa-map-marker-alt"></i>
+      <p>Saved Addresses</p>
+    </div>
+    <div onclick="openSlide('paymentSlide')">
+      <i class="fas fa-wallet"></i>
+      <p>Payment Methods</p>
+    </div>
+    <div onclick="openSlide('logoutSlide')">
+      <i class="fas fa-sign-out-alt"></i>
+      <p>Logout</p>
+    </div>
+  </div>
+
+  <!-- Slides -->
+  <div id="ordersSlide" class="slide">
+    <div class="back-button" onclick="closeSlide()">
+      <i class="fas fa-chevron-left"></i>
+      <span>Back</span>
+    </div>
+    <h2>Your Orders</h2>
+    <ul id="userOrders" style="list-style: none; padding: 0;"></ul>
+  </div>
+
+  <div id="addressesSlide" class="slide">
+    <div class="back-button" onclick="closeSlide()">
+      <i class="fas fa-chevron-left"></i>
+      <span>Back</span>
+    </div>
+    <h2>Saved Addresses</h2>
+    <p id="savedAddresses">No saved addresses found.</p>
+  </div>
+
+  <div id="paymentSlide" class="slide">
+    <div class="back-button" onclick="closeSlide()">
+      <i class="fas fa-chevron-left"></i>
+      <span>Back</span>
+    </div>
+    <h2>Payment Methods</h2>
+    <p id="paymentMethods">No payment methods added.</p>
+  </div>
+
+  <div id="logoutSlide" class="slide">
+    <div class="back-button" onclick="closeSlide()">
+      <i class="fas fa-chevron-left"></i>
+      <span>Back</span>
+    </div>
+    <h2>Logout</h2>
+    <p>Are you sure you want to logout?</p>
+    <button onclick="logoutUser()">Logout</button>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="edit-profile-modal">
+    <h2>Edit Profile</h2>
+    <input type="text" id="editProfileName" placeholder="Name">
+    <input type="email" id="editProfileEmail" placeholder="Email">
+    <input type="tel" id="editProfilePhone" placeholder="Phone">
+    <input type="file" id="editProfilePicture" accept="image/*" onchange="updateProfilePicture(event)">
+    <button onclick="saveProfile()">Save</button>
+    <button onclick="closeEditProfileModal()">Cancel</button>
+  </div>
+  <div id="modalOverlay" class="modal-overlay" onclick="closeEditProfileModal()"></div>
+
+  <script>
+    // Sample user data
+    const userProfile = {
+      name: "Saran",
+      email: "anandh@example.com",
+      phone: "91235 61839",
+      addresses: ["123 Main Street, City, State"],
+      paymentMethods: ["Credit Card ending in 1234"],
+      orders: [
+        {
+          id: 1,
+          items: [
+            { name: "Tomato", quantity: 2, price: 20 },
+            { name: "Potato", quantity: 1, price: 15 },
+          ],
+          total: 55,
+          date: "2025-04-20",
+        },
+      ],
+    };
+
+    // Open Edit Profile Modal
+    function openEditProfileModal() {
+      document.getElementById("editProfileModal").style.display = "block";
+      document.getElementById("modalOverlay").style.display = "block";
+
+      // Pre-fill current details
+      document.getElementById("editProfileName").value = document.getElementById("profileNameDisplay").textContent;
+      document.getElementById("editProfileEmail").value = document.getElementById("profileEmailDisplay").textContent;
+      document.getElementById("editProfilePhone").value = document.getElementById("profilePhoneDisplay").textContent;
+    }
+
+    // Close Edit Profile Modal
+    function closeEditProfileModal() {
+      document.getElementById("editProfileModal").style.display = "none";
+      document.getElementById("modalOverlay").style.display = "none";
+    }
+
+    // Save Profile
+    function saveProfile() {
+      const name = document.getElementById("editProfileName").value;
+      const email = document.getElementById("editProfileEmail").value;
+      const phone = document.getElementById("editProfilePhone").value;
+
+      if (!name || !email || !phone) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      // Update profile details
+      document.getElementById("profileNameDisplay").textContent = name;
+      document.getElementById("profileEmailDisplay").textContent = email;
+      document.getElementById("profilePhoneDisplay").textContent = phone;
+
+      alert("Profile updated successfully!");
+      closeEditProfileModal();
+    }
+
+    // Update Profile Picture
+    function updateProfilePicture(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById("profilePicture").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Open a slide
+    function openSlide(slideId) {
+      document.querySelectorAll(".slide").forEach((slide) => slide.classList.remove("active"));
+      document.getElementById(slideId).classList.add("active");
+
+      // Render content dynamically based on the slide
+      if (slideId === "ordersSlide") renderUserOrders();
+      if (slideId === "addressesSlide") renderSavedAddresses();
+      if (slideId === "paymentSlide") renderPaymentMethods();
+    }
+
+    // Close the current slide
+    function closeSlide() {
+      document.querySelectorAll(".slide").forEach((slide) => slide.classList.remove("active"));
+    }
+
+    // Render user orders
+    function renderUserOrders() {
+      const ordersList = document.getElementById("userOrders");
+      ordersList.innerHTML = ""; // Clear previous content
+
+      if (userProfile.orders.length === 0) {
+        ordersList.innerHTML = "<li>No orders found.</li>";
+        return;
+      }
+
+      userProfile.orders.forEach((order) => {
+        const orderDiv = document.createElement("div");
+        orderDiv.style.marginBottom = "20px";
+        orderDiv.style.padding = "10px";
+        orderDiv.style.border = "1px solid #ddd";
+        orderDiv.style.borderRadius = "5px";
+        orderDiv.style.backgroundColor = "#f9f9f9";
+
+        let itemsHtml = "";
+        order.items.forEach((item) => {
+          itemsHtml += `<li>${item.name} - ${item.quantity} kg @ ₹${item.price}/kg</li>`;
+        });
+
+        orderDiv.innerHTML = `
+          <h3>Order #${order.id}</h3>
+          <p><strong>Date:</strong> ${order.date}</p>
+          <ul>${itemsHtml}</ul>
+          <p><strong>Total:</strong> ₹${order.total}</p>
+        `;
+
+        ordersList.appendChild(orderDiv);
+      });
+    }
+
+    // Render saved addresses
+    function renderSavedAddresses() {
+      const addresses = userProfile.addresses;
+      const savedAddresses = document.getElementById("savedAddresses");
+      if (addresses.length > 0) {
+        savedAddresses.innerHTML = addresses.map((address) => `<p>${address}</p>`).join("");
+      } else {
+        savedAddresses.innerHTML = "No saved addresses found.";
+      }
+    }
+
+    // Render payment methods
+    function renderPaymentMethods() {
+      const methods = userProfile.paymentMethods;
+      const paymentMethods = document.getElementById("paymentMethods");
+      if (methods.length > 0) {
+        paymentMethods.innerHTML = methods.map((method) => `<p>${method}</p>`).join("");
+      } else {
+        paymentMethods.innerHTML = "No payment methods added.";
+      }
+    }
+
+    // Logout functionality
+    function logoutUser() {
+      alert("You have been logged out.");
+      // Redirect to login page or clear user session
+    }
+
+    // Open Sign-Up Form
+    function openSignUpForm() {
+      document.getElementById("signUpForm").style.display = "block";
+    }
+
+    // Preview Profile Picture
+    function previewProfilePicture(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById("profilePicture").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Submit Sign-Up Form
+    function submitSignUp() {
+      const name = document.getElementById("signUpName").value;
+      const email = document.getElementById("signUpEmail").value;
+      const phone = document.getElementById("signUpPhone").value;
+
+      if (!name || !email || !phone) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      // Update Profile Section
+      document.getElementById("profileNameDisplay").textContent = name;
+      document.getElementById("profileEmailDisplay").textContent = email;
+      document.getElementById("profilePhoneDisplay").textContent = phone;
+
+      // Ensure profile section is visible
+      document.getElementById("profileSection").style.display = "block";
+
+      // Hide Sign-Up Form
+      document.getElementById("signUpForm").style.display = "none";
+
+      alert("Profile updated successfully!");
+    }
+
+    document.getElementById("signupForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const phone = document.getElementById("phone").value;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save user details to Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          name,
+          email,
+          phone,
+          provider: "email"
+        });
+
+        // Save user details to localStorage
+        localStorage.setItem("userProfile", JSON.stringify({ name, email, phone }));
+
+        // Show success message
+        const signUpMessage = document.getElementById("signUpMessage");
+        signUpMessage.style.display = "block";
+        signUpMessage.textContent = "Sign-up successful! Please log in.";
+        signUpMessage.style.opacity = "1";
+
+        // Redirect to Sign In form after a delay
+        setTimeout(() => {
+          toggleForms();
+          signUpMessage.style.display = "none";
+        }, 2000);
+      } catch (error) {
+        console.error("Signup Error:", error);
+        alert(error.message);
+      }
+    });
+
+    // Load User Details on Profile Page
+    function loadUserProfile() {
+      const userProfile = JSON.parse(localStorage.getItem("userProfile"));
+
+      if (userProfile) {
+        document.getElementById("profileNameDisplay").textContent = userProfile.name || "Guest";
+        document.getElementById("profileEmailDisplay").textContent = userProfile.email || "Not Provided";
+        document.getElementById("profilePhoneDisplay").textContent = userProfile.phone || "Not Provided";
+      } else {
+        console.log("No user profile found in localStorage.");
+      }
+    }
+
+    // Call the function when the page loads
+    window.onload = loadUserProfile;
+  </script>
+</body>
+</html>
+``` 
