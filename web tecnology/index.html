@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple HTML Tags</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Pacifico&family=Open+Sans&family=Monoton&family=Fira+Code&family=Quicksand&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    .center {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .marquee {
+      font-family: 'Monoton', cursive;
+      font-size: 2rem;
+      color: #e91e63;
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
+      animation: scroll 10s linear infinite;
+      margin-bottom: 30px;
+    }
+
+    @keyframes scroll {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    table, td {
+      border: 1px solid #999;
+      padding: 10px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+    }
+
+    .heading-tags {
+      font-family: 'Roboto Slab', serif;
+      color: #1e88e5;
+    }
+
+    .text-elements {
+      font-family: 'Quicksand', sans-serif;
+      color: #388e3c;
+    }
+
+    .pre-tags {
+      font-family: 'Fira Code', monospace;
+      color: #6a1b9a;
+    }
+
+    .logical-style {
+      font-family: 'Open Sans', sans-serif;
+      color: #d84315;
+    }
+
+    .listing-tags {
+      font-family: 'Quicksand', sans-serif;
+      color: #00897b;
+    }
+
+    .definition-list {
+      font-family: 'Pacifico', cursive;
+      color: #5d4037;
+    }
+
+    .republic-india {
+      font-family: 'Roboto Slab', serif;
+      color: #3f51b5;
+    }
+
+    .features {
+      font-family: 'Open Sans', sans-serif;
+      color: #37474f;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #888;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="marquee">Simple HTML Tags</span>
+  </header>
+
+  <main>
+
+    <div class="center heading-tags">Heading Tags</div>
+    <table>
+      <tr>
+        <td><h1>Heading H1</h1></td>
+        <td><h2>Heading H2</h2></td>
+        <td><h3>Heading H3</h3></td>
+      </tr>
+      <tr>
+        <td><h4>Heading H4</h4></td>
+        <td><h5>Heading H5</h5></td>
+        <td><h6>Heading H6</h6></td>
+      </tr>
+    </table>
+    <hr>
+
+    <div class="center text-elements">Text Elements</div>
+    <table>
+      <tr>
+        <td>
+          HTML element represents a paragraph. Paragraphs are usually represented in visual media as blocks of text separated from adjacent blocks by blank lines...
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <div class="center pre-tags">PRE Tags</div>
+    <table>
+      <tr>
+        <td>
+          <pre>
+IT206 JAVA
+IT306 WEBSYSTEMS
+IT322 WEBSYSTEMS LAB
+          </pre>
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <div class="center logical-style">Logical Style</div>
+    <table>
+      <tr>
+        <td>
+          This is <b>bold</b> This is bold<br>
+          This is <big>big font</big> This is big font<br>
+          This is <i>italic</i> This is italic<br>
+          Was <s>$50</s>; now $40<br>
+          This is <small>small</small><br>
+          H<sub>2</sub>O<br>
+          May 5<sup>th</sup> 2005<br>
+          <tt>fixed-width font</tt><br>
+          This is <u>underlined</u><br>
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <div class="center listing-tags">Listing Tags</div>
+    <table>
+      <tr>
+        <td>
+          <h4>Numbered list:</h4>
+          <ol>
+            <li>Apples</li>
+            <li>Bananas</li>
+            <li>Lemons</li>
+            <li>Oranges</li>
+          </ol>
+        </td>
+        <td>
+          <h4>Letters list:</h4>
+          <ol type="A">
+            <li>Apples</li>
+            <li>Bananas</li>
+            <li>Lemons</li>
+            <li>Oranges</li>
+          </ol>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h4>Lowercase letters list:</h4>
+          <ol type="a">
+            <li>Apples</li>
+            <li>Bananas</li>
+            <li>Lemons</li>
+            <li>Oranges</li>
+          </ol>
+        </td>
+        <td>
+          <h4>Roman numbers list:</h4>
+          <ol type="I">
+            <li>Apples</li>
+            <li>Bananas</li>
+            <li>Lemons</li>
+            <li>Oranges</li>
+          </ol>
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <div class="center definition-list">A Definition List</div>
+    <table>
+      <tr>
+        <td>
+          <dl>
+            <dt>Coffee</dt>
+            <dd>Black hot drink</dd>
+            <dt>Milk</dt>
+            <dd>White cold drink</dd>
+          </dl>
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <h1 class="republic-india"><u><center>Republic of India</center></u></h1>
+    <p>
+      India is the Seventh Largest country in the world by geographical area...
+    </p>
+    <center>
+      <img src="indiamap.jfif" alt="Map of India" usemap="#india"/>
+      <map name="india">
+        <area shape="circle" coords="160,340,20" href="andhrapradesh.html">
+        <area shape="circle" coords="120,440,10" href="kerala.html">
+        <area shape="circle" coords="140,420,20" href="tamilnadu.html">
+      </map>
+    </center>
+
+    <h2 class="features">Features</h2>
+    <ul class="features">
+      <li><b>Capital</b> - New Delhi</li>
+      <li><b>Largest City</b> - Mumbai</li>
+      <li><b>Currency</b> - Indian Rupee</li>
+      <li><b>Time Format</b> - IST (UTC + 5:30)</li>
+      <li><b>National Sport</b> - Hockey</li>
+      <li><b>Current PM</b> - Narendra Modi</li>
+      <li><b>Current President</b> - Droupadi Murmu</li>
+    </ul>
+
+    <h2 class="features">
+      <b>To view details of states please click on the specified area in the map !!!</b>
+    </h2>
+  </main>
+
+  <footer>
+    <p>© 2025 Simple HTML Tags Example</p>
+  </footer>
+</body>
+</html>
